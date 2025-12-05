@@ -3,6 +3,24 @@
 <head>
     <title>Jacobian Calculator</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script>
+        // Small helper to toggle custom input visibility per variable
+        function onVarChoiceChange(i) {
+            const sel = document.getElementById('var_choice_' + i);
+            const custom = document.getElementById('var_custom_' + i + '_wrap');
+            if (!sel || !custom) return;
+            if (sel.value === 'custom') custom.style.display = 'inline-block';
+            else custom.style.display = 'none';
+        }
+    </script>
+    <!-- MathJax for LaTeX rendering -->
+    <script>
+      window.MathJax = {
+        tex: {inlineMath: [['$','$'], ['\\(','\\)']]},
+        svg: { fontCache: 'global' }
+      };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -15,7 +33,27 @@
 
         <h3>Variable Names</h3>
         {% for i in range(num_vars) %}
-        <input type="text" name="var_{{ i }}" placeholder="Variable {{ i+1 }}" required>
+        <div class="var-row">
+            <label>Variable {{ i+1 }}</label>
+            {% if variable_options %}
+            {% set current = (var_names[i] if var_names and var_names|length > i else None) %}
+            <select id="var_choice_{{ i }}" name="var_choice_{{ i }}" onchange="onVarChoiceChange({{ i }})">
+                {% for opt in variable_options %}
+                    {% if current == opt %}
+                        <option value="{{ opt }}" selected>{{ opt }}</option>
+                    {% else %}
+                        <option value="{{ opt }}">{{ opt }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            {% set show_custom = current is not none and (current not in variable_options) %}
+            <span id="var_custom_{{ i }}_wrap" style="display: {{ 'inline-block' if show_custom else 'none' }};">
+                <input type="text" id="var_custom_{{ i }}" name="var_custom_{{ i }}" placeholder="custom name" value="{{ current if show_custom else '' }}" />
+            </span>
+            {% else %}
+            <input type="text" name="var_{{ i }}" placeholder="Variable {{ i+1 }}" required>
+            {% endif %}
+        </div>
         {% endfor %}
 
         <h3>Functions</h3>
@@ -26,13 +64,40 @@
         <button type="submit">Calculate Jacobian</button>
     </form>
 
+    <div class="actions">
+        <a class="back-button" href="/">Back</a>
+    </div>
+
     {% if jacobian %}
     <div class="result">
-        <h3>Jacobian Matrix:</h3>
+        <h3>Jacobian Matrix (plain):</h3>
         <pre>{{ jacobian }}</pre>
 
-        <h3>Determinant:</h3>
+        <h3>Jacobian Matrix (table):</h3>
+        <table class="matrix">
+            <tbody>
+            {% for row in matrix_entries %}
+                <tr>
+                {% for val in row %}
+                    <td>{{ val }}</td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Jacobian Matrix (LaTeX):</h3>
+        <div class="latex">$$
+            {{ jacobian_latex }}
+        $$</div>
+
+        <h3>Determinant (plain):</h3>
         <pre>{{ determinant }}</pre>
+
+        <h3>Determinant (LaTeX):</h3>
+        <div class="latex">$$
+            {{ determinant_latex }}
+        $$</div>
     </div>
     {% endif %}
 </div>

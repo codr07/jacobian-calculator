@@ -57,3 +57,18 @@ pre {
     border-radius: 4px;
     overflow-x: auto;
 }
+
+.actions { display:flex; gap:10px; align-items:center; margin-top:12px }
+.back-button {
+    display: inline-block;
+    padding: 10px 14px;
+    background: #6c757d;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+}
+.back-button:hover { background: #5a6369 }
+
+.matrix { border-collapse: collapse; }
+.matrix td { border: 1px solid #444; padding: 8px; min-width: 40px; text-align: center }
+.latex { background: #111; padding: 10px; border-radius: 4px; margin-top:8px }
