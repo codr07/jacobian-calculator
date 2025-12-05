@@ -11,11 +11,8 @@ def index():
 
         # Provide a list of variable options (Latin a-z and common Greek names)
         latin = [chr(c) for c in range(ord('a'), ord('z')+1)]
-        greek = [
-            'alpha','beta','gamma','delta','epsilon','zeta','eta','theta','iota','kappa',
-            'lambda','mu','nu','xi','omicron','pi','rho','sigma','tau','upsilon','phi',
-            'chi','psi','omega'
-        ]
+        greek = ['α','β','γ','δ','ε','ζ','η','θ','ι','κ','λ','μ','ν','ξ','ο','π','ρ','σ','τ','υ','φ','χ','ψ','ω']
+
         variable_options = latin + greek + ['custom']
 
         return render_template("compute.html",
