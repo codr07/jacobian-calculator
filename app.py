@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request
-from sympy import symbols, sympify, Matrix, latex as sympy_latex
+from flask import Flask, render_template, request, redirect, url_for
+from sympy import symbols, sympify, Matrix, latex as sympy_latex, simplify
 
 app = Flask(__name__)
 
@@ -23,8 +23,11 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/compute.html", methods=["POST"])
+@app.route("/compute", methods=["GET", "POST"])
 def compute():
+    if request.method == 'GET':
+        return redirect(url_for('index'))
+
     num_vars = int(request.form.get("num_vars"))
     num_funcs = int(request.form.get("num_funcs"))
 
@@ -59,15 +62,16 @@ def compute():
 
     if num_vars == num_funcs:
         det = J.det()
-        determinant_str = str(det)
-        determinant_latex = sympy_latex(det)
+        det_simpl = simplify(det)
+        determinant_str = str(det_simpl)
+        determinant_latex = sympy_latex(det_simpl)
     else:
         determinant_str = "Not square — no determinant"
         determinant_latex = "Not square — no determinant"
 
     # Provide variable options again for the template (for navigation back/forth)
     latin = [chr(c) for c in range(ord('a'), ord('z')+1)]
-    greek = ['α','β','γ','δ','ε','ζ','η','θ','ι','κ','λ','μ','ν','ξ','ο','π','ρ','σ','τ','υ','φ','χ','ψ','ω']
+    greek = ['alpha','beta','gamma','delta','epsilon','zeta','eta','theta','iota','kappa', 'lambda','mu','nu','xi','omicron','pi','rho','sigma','tau','upsilon','phi', 'chi','psi','omega']
 
     variable_options = latin + greek + ['custom']
 
