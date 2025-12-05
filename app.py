@@ -23,7 +23,7 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/compute", methods=["POST"])
+@app.route("/compute.html", methods=["POST"])
 def compute():
     num_vars = int(request.form.get("num_vars"))
     num_funcs = int(request.form.get("num_funcs"))

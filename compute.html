@@ -27,7 +27,7 @@
 <div class="container">
     <h2>Step 2: Enter Variables and Functions</h2>
 
-    <form action="/compute" method="POST">
+    <form action="/compute.html" method="POST">
         <input type="hidden" name="num_vars" value="{{ num_vars }}">
         <input type="hidden" name="num_funcs" value="{{ num_funcs }}">
 
@@ -101,15 +101,6 @@
     </div>
     {% endif %}
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // initialize custom input visibility per variable
-    {% for i in range(num_vars) %}
-    try { onVarChoiceChange({{ i }}); } catch(e) {}
-    {% endfor %}
-});
-</script>
 
 </body>
 </html>
