@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jacobian Calculator</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Step 2: Enter Variables and Functions</h2>
+
+    <form action="/compute" method="POST">
+        <input type="hidden" name="num_vars" value="{{ num_vars }}">
+        <input type="hidden" name="num_funcs" value="{{ num_funcs }}">
+
+        <h3>Variable Names</h3>
+        {% for i in range(num_vars) %}
+        <input type="text" name="var_{{ i }}" placeholder="Variable {{ i+1 }}" required>
+        {% endfor %}
+
+        <h3>Functions</h3>
+        {% for j in range(num_funcs) %}
+        <textarea name="func_{{ j }}" rows="2" placeholder="Function {{ j+1 }}" required></textarea>
+        {% endfor %}
+
+        <button type="submit">Calculate Jacobian</button>
+    </form>
+
+    {% if jacobian %}
+    <div class="result">
+        <h3>Jacobian Matrix:</h3>
+        <pre>{{ jacobian }}</pre>
+
+        <h3>Determinant:</h3>
+        <pre>{{ determinant }}</pre>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
